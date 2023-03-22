@@ -1,0 +1,6 @@
+data/
+mypy.cache
+.vscode
+*.pyc
+.env
+venv-rapid/
