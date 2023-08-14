@@ -2,23 +2,23 @@
 Ready to use project (and docker image) for deploying sklearn models using fastAPI
 
 
-## What the hell is this all about
+## What is this all about
 
-**TLDR: It's an API, just use a POST response on api/predict with a JSON {'data':{dict(str,float)}} and a header {'access_token': API_KEY} on the IP in the server and you will get a dictionary {'prediction': str} with the prediction**
+**TLDR: Just use a POST response on api/predict with a JSON {'data':{dict(str,float)}} and a header {'access_token': API_KEY} on the IP in the server and you will get a dictionary {'prediction': str} with the prediction**
 
 
 The API itself is composed by these capabilities
 
-* `GET` Serves as a hello world message. Useful to know if the server is up
-* `POST api/predict/` predicts given a dictionary of infomration named `data`. The output is just the class prediction
+* `GET /` Serves as a hello world message. Useful to know if the server is up
+* `POST api/predict/` predicts given a dictionary of infomration named `data`. The output is just the class prediction. The model imputs the missing data using `KNN` with `n` equals 5 
   
-All of the `api/*` responses need a header with the format `{'access_token':API_KEY}` to improve security. In order to not save the `API_KEY` on `.env`, the dockerfile runs a script to generate an `API_KEY` as soon as the build is finished. You can check it by inspecting the container
+All `POST` responses need a header with the format `{'access_token':API_KEY}` to authenticate the usage. A default key is already in 
 
 The pipeline has been tested on some cloud services.
 
 ## Some useful commands to run locally
 
-Set virtual environment running the `setup_venv.bat` or copy-pasting these commands on the terminal (works for windows)
+To set up the virtual environment
 
 ```bat
 python -m venv venv
@@ -47,10 +47,12 @@ docker run -p 80:80 --name api-container fastapi-sklearn-deploy
 
 This is the better method as the building also creates a custom `API_KEY` on the dot-env.
 
+
+
 ## Some useful advices and TODOs
 
 * You may want to create the `requirements.txt` by using `pipreqs`, but it may be possible some specific packages are not installed (like `uvicorn`) ask me which version of the package we are using on the venv if you miss one on requirements
 
 * This proyect is as safe as using a condom made of seaweed. Take it as a shortcut to start doing some other stuff you need to focus on.
 
-* **If you want to use this on production, be warned** 
+* **If you want to use this on production, be warned**

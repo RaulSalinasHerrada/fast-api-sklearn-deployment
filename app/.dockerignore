@@ -3,4 +3,5 @@ mypy.cache
 .vscode
 *.pyc
 .env
+.venv
 venv-rapid/
