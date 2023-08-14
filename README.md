@@ -4,15 +4,16 @@ Ready to use project (and docker image) for deploying sklearn models using fastA
 
 ## What is this all about
 
-**TLDR: Just use a POST response on api/predict with a JSON {'data':{dict(str,float)}} and a header {'access_token': API_KEY} on the IP in the server and you will get a dictionary {'prediction': str} with the prediction**
-
+**TLDR: POST on api/predict/ with a JSON {'data':{dict(str,float)}} and a header {'access_token': API_KEY} on the IP in the server and you will get a dictionary {'prediction': dict } with the predictions from sklearn model**
 
 The API itself is composed by these capabilities
 
 * `GET /` Serves as a hello world message. Useful to know if the server is up
-* `POST api/predict/` predicts given a dictionary of infomration named `data`. The output is just the class prediction. The model imputs the missing data using `KNN` with `n` equals 5 
+* `GET /api/names/` Gets names of columns for the model
+
+* `POST /api/predict/` predicts given a dictionary of infomration named `data`. The output is just the class prediction. The model imputs the missing data using a simple Imputer
   
-All `POST` responses need a header with the format `{'access_token':API_KEY}` to authenticate the usage. A default key is already in 
+All `/api/` responses need a header with the format `{'access_token':API_KEY}` to authenticate the usage. A default key is already in 
 
 The pipeline has been tested on some cloud services.
 
@@ -36,7 +37,7 @@ The option `--reload` is critical to solve bugs while you write the code on the 
 
 ## Deployment with docker 
 
-### Local
+### Docker only
 
 You can build the docker using
 
@@ -47,12 +48,20 @@ docker run -p 80:80 --name api-container fastapi-sklearn-deploy
 
 This is the better method as the building also creates a custom `API_KEY` on the dot-env.
 
+### Docker compose (recommended)
+
+```bat
+docker compose build
+docker compose up
+```
+
+If `make` is installed on the OS, `make up` runs this from the `Makefile`
 
 
 ## Some useful advices and TODOs
 
 * You may want to create the `requirements.txt` by using `pipreqs`, but it may be possible some specific packages are not installed (like `uvicorn`) ask me which version of the package we are using on the venv if you miss one on requirements
 
-* This proyect is as safe as using a condom made of seaweed. Take it as a shortcut to start doing some other stuff you need to focus on.
+* Other security procedures are necesary, like using `https`
 
 * **If you want to use this on production, be warned**

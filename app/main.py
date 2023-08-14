@@ -9,6 +9,7 @@ from pandas import DataFrame
 import pandas as pd
 import auth
 import os
+import traceback
 
 import joblib 
 
@@ -22,9 +23,13 @@ async def load_model():
     clf.model = joblib.load("./ml/models/model.joblib")
     clf.names = clf.model.feature_names_in_
 
-@app.get('/', tags=['hello'])
+@app.get('/', tags=['hello_world'])
 async def root():
     return {"message": "Hello World"}
+
+@app.get('/api/column_names',tags=['predictions'])
+async def get_names(api_key: APIKey = Depends(auth.get_api_key)):
+    return {'names': clf.names}
 
 @app.post('/api/predict', tags=['predictions'])
 async def get_prediction(
@@ -42,6 +47,10 @@ async def get_prediction(
         return {"prediction": json_pred}
     
     except Exception as e:
-        return {"error": str(e)}
+        tb = traceback.format_exc()
+        return {
+            "error_type": type(e).__name__,
+            "error_msg": str(e),
+            "traceback": tb}
         
 
